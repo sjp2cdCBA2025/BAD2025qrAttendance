@@ -450,7 +450,7 @@
                 }
                 
                 // Format: "id;name;yearLevel;major;program" with semicolons instead of colons
-                const qrData = `${studentId} ${studentName} ${yearLevel} ${major} ${program}`;
+                const qrData = `${studentId}; ${studentName}; ${yearLevel}; ${major}; ${program}`;
                 
                 // Clear previous QR code
                 document.getElementById('qrcode').innerHTML = '';
