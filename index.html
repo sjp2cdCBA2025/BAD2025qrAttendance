@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBA Student Attendance QR Generator | St. John Paul II College of Davao</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #FFC107;
+            --secondary-color: #FFD54F;
+            --accent-color: #FFA000;
+            --text-color: #333;
+            --light-bg: #FFFDE7;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 100%;
+            padding: 20px;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: right;
+            }
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .logo-container {
+                margin-bottom: 0;
+            }
+        }
+        
+        .logo {
+            height: 60px;
+            margin: 0 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .logo {
+                height: 80px;
+                margin-right: -20px;
+            }
+        }
+        
+        .logo2 {
+            height: 100px;
+            margin: 0 0px;
+        }
+        
+        @media (min-width: 768px) {
+            .logo2 {
+                height: 120px;
+                margin-right: 0px;
+            }
+        }
+
+        .header-text h1 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 20px;
+        }
+        
+        .header-text h2 {
+            margin: 5px 0 0;
+            color: var(--accent-color);
+            font-size: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .header-text h1 {
+                font-size: 24px;
+            }
+            
+            .header-text h2 {
+                font-size: 18px;
+            }
+        }
+        
+        h1, h2, h3 {
+            color: var(--text-color);
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+            font-size: 24px;
+        }
+        
+        @media (min-width: 768px) {
+            .page-title {
+                font-size: 30px;
+            }
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        @media (min-width: 768px) {
+            .form-container {
+                padding: 30px;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .error-message {
+            color: #D32F2F;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            button {
+                width: auto;
+            }
+        }
+        
+        button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        @media (min-width: 768px) {
+            .output-container {
+                padding: 30px;
+            }
+        }
+        
+        #qrcode {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border: 4px solid #000;
+            border-radius: 8px;
+        }
+        
+        #qrContainer {
+            display: none;
+            position: relative;
+            background-color: white;
+            padding: 20px;
+            border: 4px solid #000;
+            border-radius: 12px;
+            max-width: 100%;
+        }
+        
+        #qrInfo {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            word-break: break-word;
+        }
+        
+        .qr-value {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+        
+        .download-btn {
+            background-color: #2E7D32;
+        }
+        
+        .download-btn:hover {
+            background-color: #388E3C;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 5px solid var(--secondary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions h3 {
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border-top: 2px solid var(--secondary-color);
+            font-size: 14px;
+        }
+        
+        .required {
+            color: red;
+        }
+        
+        #canvas {
+            display: none;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <!-- Placeholder logos - replace src with actual logo paths when available -->
+                <img src="jp.png" alt="St. John Paul II College of Davao Logo" class="logo">
+                <img src="CBA.png" alt="College of Business Administration Logo" class="logo2">
+            </div>
+            <div class="header-text">
+                <h1>St. John Paul II College of Davao</h1>
+                <h2>College of Business Administration</h2>
+            </div>
+        </header>
+        
+        <h1 class="page-title">CBA Student Attendance QR Code Generator</h1>
+        
+        <div class="form-container">
+            <div class="form-group">
+                <label for="studentId">Student ID Number <span class="required">*</span></label>
+                <input type="text" id="studentId" placeholder="Enter Student ID" required>
+                <p id="studentIdError" class="error-message">Student ID must contain numbers only</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentName">Full Name <span class="required">*</span></label>
+                <input type="text" id="studentName" placeholder="Enter Full Name" required>
+                <p id="studentNameError" class="error-message">Name must not contain numbers</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="yearLevel">Year Level <span class="required">*</span></label>
+                <select id="yearLevel">
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="major">Major <span class="required">*</span></label>
+                <select id="major">
+                    <option value="Marketing">Marketing</option>
+                    <option value="Human Resource Management">Human Resource Management</option>
+                    <option value="Financial Management">Financial Management</option>
+                    <option value="Marketing Management">Marketing Management</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="program">Program <span class="required">*</span></label>
+                <select id="program">
+                    <option value="Regular Program">Regular Program</option>
+                    <option value="Special Program">Special Program</option>
+                    <option value="Evening Program">Evening Program</option>
+                </select>
+            </div>
+            
+            <button id="generateBtn">Generate QR Code</button>
+        </div>
+        
+        <div class="output-container hidden" id="outputContainer">
+            <h2>Student Attendance QR Code</h2>
+            <p>Please save this QR code and present it for attendance scanning</p>
+            
+            <div id="qrContainer">
+                <div id="qrcode"></div>
+                <div id="qrInfo"></div>
+            </div>
+            
+            <canvas id="canvas" width="350" height="450"></canvas>
+            <button id="downloadBtn" class="download-btn">Download QR Code</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions for Students</h3>
+            <p>This tool generates your unique attendance QR code for the College of Business Administration (CBA) Day.</p>
+            <ol>
+                <li>Enter your Student ID Number (numbers only) and Full Name (letters only) exactly as they appear in your school records.</li>
+                <li>Select your Year Level, Major, and Program from the dropdown menus.</li>
+                <li>Click "Generate QR Code" to create your unique attendance QR code.</li>
+                <li>Download the QR code and keep it on your mobile device or print it out.</li>
+                <li>Present this QR code when requested for attendance verification.</li>
+            </ol>
+            <p><strong>Note:</strong> Each QR code is linked to your student information. Please ensure all details are correct before downloading.</p>
+        </div>
+        
+        <footer>
+            © 2025 College of Business Administration | St. John Paul II College of Davao
+            <br>All Rights Reserved
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentIdInput = document.getElementById('studentId');
+            const studentNameInput = document.getElementById('studentName');
+            const studentIdError = document.getElementById('studentIdError');
+            const studentNameError = document.getElementById('studentNameError');
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const outputContainer = document.getElementById('outputContainer');
+            const qrContainer = document.getElementById('qrContainer');
+            const qrInfo = document.getElementById('qrInfo');
+            const canvas = document.getElementById('canvas');
+            let qrcode = null;
+            
+            // Validate student ID (numbers only)
+            studentIdInput.addEventListener('input', function() {
+                const value = this.value;
+                const isValid = /^\d*$/.test(value);
+                
+                if (!isValid) {
+                    this.value = value.replace(/\D/g, '');
+                    studentIdError.style.display = 'block';
+                } else {
+                    studentIdError.style.display = 'none';
+                }
+            });
+            
+            // Validate student name (letters and ñ only)
+            studentNameInput.addEventListener('input', function() {
+                const value = this.value;
+                const isValid = /^[a-zA-ZÑñ\s]*$/.test(value);
+                
+                if (!isValid) {
+                    this.value = value.replace(/[^a-zA-ZÑñ\s]/g, '');
+                    studentNameError.style.display = 'block';
+                } else {
+                    studentNameError.style.display = 'none';
+                }
+            });
+            
+            generateBtn.addEventListener('click', function() {
+                const studentId = studentIdInput.value.trim();
+                const studentName = studentNameInput.value.trim();
+                const yearLevel = document.getElementById('yearLevel').value;
+                const major = document.getElementById('major').value;
+                const program = document.getElementById('program').value;
+                
+                if (!studentId) {
+                    alert('Please enter your Student ID');
+                    return;
+                }
+                
+                if (!studentName) {
+                    alert('Please enter your Full Name');
+                    return;
+                }
+                
+                // Format: "id;name;yearLevel;major;program" with semicolons instead of colons
+                const qrData = `${studentId} ${studentName} ${yearLevel} ${major} ${program}`;
+                
+                // Clear previous QR code
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Get QR container dimensions
+                const containerWidth = Math.min(window.innerWidth - 40, 300);
+                const qrSize = Math.min(containerWidth - 40, 200);
+                
+                // Generate new QR code
+                qrcode = new QRCode(document.getElementById('qrcode'), {
+                    text: qrData,
+                    text: qrData,
+                    width: qrSize,
+                    height: qrSize,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                // Display QR info text
+                qrInfo.innerHTML = `ID: ${studentId}<br>Name: ${studentName}<br>${yearLevel} - ${major}<br>${program}`;
+                
+                // Show output container and QR container
+                outputContainer.classList.remove('hidden');
+                qrContainer.style.display = 'block';
+                
+                // Scroll to the QR code
+                outputContainer.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            downloadBtn.addEventListener('click', function() {
+                if (qrcode) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw border
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = 8;
+                    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+                    
+                    // Draw header text
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('St. John Paul II College of Davao', canvas.width / 2, 40);
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillText('College of Business Administration', canvas.width / 2, 65);
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText('Student Attendance QR Code', canvas.width / 2, 95);
+                    
+                    // Get QR code image
+                    const qrImg = document.querySelector('#qrcode img');
+                    
+                    // Draw QR code to canvas
+                    ctx.drawImage(qrImg, (canvas.width - qrImg.width) / 2, 120);
+                    
+                    // Add student info
+                    const studentId = studentIdInput.value.trim();
+                    const studentName = studentNameInput.value.trim();
+                    const yearLevel = document.getElementById('yearLevel').value;
+                    const major = document.getElementById('major').value;
+                    const program = document.getElementById('program').value;
+                    
+                    const yStart = 120 + qrImg.height + 30;
+                    ctx.font = '14px Arial';
+                    ctx.fillText(`ID: ${studentId}`, canvas.width / 2, yStart);
+                    ctx.fillText(`Name: ${studentName}`, canvas.width / 2, yStart + 25);
+                    ctx.fillText(`${yearLevel} - ${major}`, canvas.width / 2, yStart + 50);
+                    ctx.fillText(`${program}`, canvas.width / 2, yStart + 75);
+                    
+                    // Convert canvas to data URL
+                    const dataURL = canvas.toDataURL('image/png');
+                    
+                    // Create download link
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = dataURL;
+                    downloadLink.download = `CBA_Attendance_${studentId}.png`;
+                    
+                    // Trigger download
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
